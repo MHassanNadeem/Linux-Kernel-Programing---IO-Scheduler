@@ -95,18 +95,24 @@ static int coop_dispatch(struct request_queue *q, int force)
 
 static void coop_add_request(struct request_queue *q, struct request *rq)
 {
-	static int count = 0;
+	static u64 count = 0;
+	static u64 vruntime_max = 0;
 	struct coop_data *cd;
+	struct task_struct *task = current;
+	struct sched_entity se = task->se;
+	u64 curr_vruntime = se.vruntime;
 	//Get the elevator queue
 	struct rb_root *the_root = q->elevator->elevator_data;
 
 	//Add the request to the queue
 	count++;
+	if(curr_vruntime > vruntime_max)
+		vruntime_max = curr_vruntime;
 	cd = (struct coop_data*)kmalloc(sizeof(struct coop_data), GFP_ATOMIC);
 	if(cd == NULL)
 		return;
 	cd->rq = rq;
-	cd->prio = count;
+	cd->prio = count + curr_vruntime/vruntime_max*128;
 	insert_node_rb_tree(cd, the_root);
 	return;	
 
