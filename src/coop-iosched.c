@@ -249,4 +249,4 @@ module_exit(coop_exit);
 
 MODULE_AUTHOR("Jens Axboe");
 MODULE_LICENSE("GPL");
-MODULE_DESCRIPTION("No-op IO scheduler");
+MODULE_DESCRIPTION("Co-op IO scheduler");
