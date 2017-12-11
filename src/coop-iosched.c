@@ -12,7 +12,7 @@
 struct coop_data {
 	struct rb_node node;
 	struct request *rq;
-	int prio;
+	u64 prio;
 };
 void insert_node_rb_tree(struct coop_data *new, struct rb_root *the_root)
 {
@@ -112,7 +112,13 @@ static void coop_add_request(struct request_queue *q, struct request *rq)
 	if(cd == NULL)
 		return;
 	cd->rq = rq;
-	cd->prio = count + curr_vruntime/vruntime_max*128;
+	cd->prio = count +(curr_vruntime*1024)/vruntime_max;
+	//if(count%100 == 0){
+	//	printk("prio = %llu\n",cd->prio);
+	//	printk("count = %llu\n",count);
+	//	printk("max = %llu\n", vruntime_max);
+	//	printk("curr = %llu\n", curr_vruntime);
+	//}
 	insert_node_rb_tree(cd, the_root);
 	return;	
 

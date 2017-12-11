@@ -61,3 +61,5 @@ process_blktrace(COOP_DATA_FILE, '_'+COOP_DATA_FILE)
 single_plot('COOP', '_'+COOP_DATA_FILE, COOP_PLOT_FILE)
 
 dual_plot('CFQ', '_'+CFQ_DATA_FILE, 'COOP', '_'+COOP_DATA_FILE, BOTH_PLOT_FILE);
+
+set_sched('cfq')
